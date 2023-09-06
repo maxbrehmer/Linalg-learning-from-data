@@ -1,0 +1,64 @@
+---
+title: "Assignment 1"
+author: "Max Brehmer"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Setup
+
+```{r}
+library(R.matlab)
+mnistdata <- readMat("mnistdata.mat")
+```
+
+```{r}
+str(mnistdata)
+
+T <- matrix(nrow = 10, ncol = 784)
+
+for (k in 1:784) {
+  T[1,k] <- mean(mnistdata$train0[, k]);
+  T[2,k] <- mean(mnistdata$train1[, k]);
+  T[3,k] <- mean(mnistdata$train2[, k]);
+  T[4,k] <- mean(mnistdata$train3[, k]);
+  T[5,k] <- mean(mnistdata$train4[, k]);
+  T[6,k] <- mean(mnistdata$train5[, k]);
+  T[7,k] <- mean(mnistdata$train6[, k]);
+  T[8,k] <- mean(mnistdata$train7[, k]);
+  T[9,k] <- mean(mnistdata$train8[, k]);
+  T[10,k] <- mean(mnistdata$train9[, k]);
+}
+```
+
+```{r}
+source("Viewdigit.R", local = knitr::knit_global())
+```
+
+## Part 1: Centroid Method
+
+### Step 1a: Calculating distance between means and test image
+
+```{r}
+source("Centroid.R", local = knitr::knit_global())
+dist
+```
+
+### Step 1b: Classifying the test set of digit
+```{r}
+classifier(mnistdata$test0, T)
+```
+
+
+### Step 1c: Success rate of each digit
+
+## Part 2: PCA Method
+
+### Step 2a: Finding principal components of the test training set
+
+### Step 2b: Test and reporting of success rate
+
