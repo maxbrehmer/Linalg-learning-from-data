@@ -9,14 +9,15 @@ for (k in 1:10) {
 
 
 # Step b
-classifier <- function(A, T) {
-  n <- nrow(A)
+classifier <- function(A, T, n) {
+  #n <- nrow(A)
   labels <- numeric(n)
   
   for (i in 1:n) {
     d <- 0
     for (k in 1:10) {
       dist[k] <- sqrt(sum((A[i, ] - T[k, ])^2))
+      
       if (dist[k] < dist[d+1]) {
         d <- k - 1
       }
@@ -26,4 +27,18 @@ classifier <- function(A, T) {
   }
   
   return(labels)
+}
+
+
+# Step C
+class_count <- function (class, digit) {
+  correct <- 0
+  for (i in 1:length(class)) {
+    if (class[i] == digit) {
+      correct <- correct+1
+    }
+  }
+  score <- correct/length(class)
+  
+  return(score)
 }

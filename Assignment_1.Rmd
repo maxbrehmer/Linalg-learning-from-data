@@ -13,11 +13,15 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r}
 library(R.matlab)
-mnistdata <- readMat("mnistdata.mat")
+mnistdata <- readMat("../data/mnistdata.mat")
 ```
 
 ```{r}
-str(mnistdata)
+source("Viewdigit.R", local = knitr::knit_global())
+```
+
+```{r}
+#str(mnistdata)
 
 T <- matrix(nrow = 10, ncol = 784)
 
@@ -35,30 +39,114 @@ for (k in 1:784) {
 }
 ```
 
-```{r}
-source("Viewdigit.R", local = knitr::knit_global())
-```
-
 ## Part 1: Centroid Method
 
 ### Step 1a: Calculating distance between means and test image
 
 ```{r}
 source("Centroid.R", local = knitr::knit_global())
-dist
+
+dist_score <- data.frame("Digit" = c(0, 1, 2, 3, 4, 5, 6, 7, 8 ,9), 
+                          "Norm distance" = c(dist[1], dist[2], dist[3], 
+                                      dist[4], dist[5], dist[6], 
+                                      dist[7], dist[8], dist[9], dist[10]))
+
+knitr::kable(dist_score)
 ```
 
-### Step 1b: Classifying the test set of digit
+### Step 1b: Classifying the test set of a digit
 ```{r}
-classifier(mnistdata$test0, T)
+class0 <- classifier(mnistdata$test0, T, 500)
+class1 <- classifier(mnistdata$test1, T, 500)
+class2 <- classifier(mnistdata$test2, T, 500)
+class3 <- classifier(mnistdata$test3, T, 500)
+class4 <- classifier(mnistdata$test4, T, 500)
+class5 <- classifier(mnistdata$test5, T, 500)
+class6 <- classifier(mnistdata$test6, T, 500)
+class7 <- classifier(mnistdata$test7, T, 500)
+class8 <- classifier(mnistdata$test8, T, 500)
+class9 <- classifier(mnistdata$test9, T, 500)
 ```
 
 
 ### Step 1c: Success rate of each digit
+```{r}
+cc0 <- class_count(class0, 0)
+cc1 <- class_count(class1, 1)
+cc2 <- class_count(class2, 2)
+cc3 <- class_count(class3, 3)
+cc4 <- class_count(class4, 4)
+cc5 <- class_count(class5, 5)
+cc6 <- class_count(class6, 6)
+cc7 <- class_count(class7, 7)
+cc8 <- class_count(class8, 8)
+cc9 <- class_count(class9, 9)
+
+cc0_percent <- paste0(cc0*100, "%")
+cc1_percent <- paste0(cc1*100, "%")
+cc2_percent <- paste0(cc2*100, "%")
+cc3_percent <- paste0(cc3*100, "%")
+cc4_percent <- paste0(cc4*100, "%")
+cc5_percent <- paste0(cc5*100, "%")
+cc6_percent <- paste0(cc6*100, "%")
+cc7_percent <- paste0(cc7*100, "%")
+cc8_percent <- paste0(cc8*100, "%")
+cc9_percent <- paste0(cc9*100, "%")
+
+digit_score <- data.frame("Digit" = c(0, 1, 2, 3, 4, 5, 6, 7, 8 ,9), 
+                          "Score" = c(cc0_percent, cc1_percent, cc2_percent, 
+                                      cc3_percent, cc4_percent, cc5_percent, 
+                                      cc6_percent, cc7_percent, cc8_percent, cc9_percent))
+
+knitr::kable(digit_score)
+```
+
 
 ## Part 2: PCA Method
+```{r}
+source("PCA.R", local = knitr::knit_global())
+```
+
+```{r}
+# Assuming you have already defined 'Us' and 'test4' in your R environment
+
+# Get the 14th row from 'test4' and convert it to a double vector
+z <- as.vector(as.double(mnistdata$test4[14, , drop = TRUE]))
+
+# Initialize a vector to store distances
+dist_pca <- numeric(10)
+
+# Loop through each digit (0 to 9)
+for (k in 1:10) {
+  # Get the 'Uk' matrix for the current digit
+  Uk <- Us[,, k]
+  
+  # Project 'z' onto the space spanned by 'Uk'
+  projection <- Uk %*% (t(Uk) %*% z)
+  
+  # Calculate the residual vector
+  residual <- z - projection
+  
+  # Compute the Euclidean distance (L2 norm) between 'z' and the projection
+  dist_pca[k] <- sqrt(sum(residual^2))
+}
+```
+
+
+```{r}
+size_U3
+
+dist_pca
+```
+
 
 ### Step 2a: Finding principal components of the test training set
 
 ### Step 2b: Test and reporting of success rate
+
+
+
+
+
+
 
