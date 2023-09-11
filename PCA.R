@@ -19,29 +19,11 @@ Us <- array(0, dim = c(28*28, basis_len, 10))
 for (k in 1:10) {
   # Get the name of the variable for the current digit
   s <- paste0('train', k-1)
-  
-  # Check if the variable exists in the mnistdata list or data frame
-  if (s %in% names(mnistdata)) {
-    # Get the object from mnistdata
-    obj <- mnistdata[[s]]
-    
-    # Check the structure and type of obj
-    if (is.numeric(obj)) {
-      # If obj is already numeric, no need to convert
-      A <- as.matrix(obj)
-    } else {
-      # If obj is not numeric, you may need to perform appropriate conversion
-      # Example: A <- as.matrix(as.double(obj))
-      cat("Variable", s, "is not numeric and cannot be converted to double.\n")
-    }
-    
-    # Perform further operations on A as needed
-  } else {
-    cat("Variable", s, "does not exist in mnistdata.\n")
-  }
-  
-  # Evaluate the variable and convert it to a double matrix
-  #A <- as.matrix(double(get(s)))
+
+  # Get the object from mnistdata
+  obj <- mnistdata[[s]]
+
+  A <- as.matrix(obj)
   
   # Perform Singular Value Decomposition
   svd_result <- svd(t(A), nu = basis_len, nv = 0)
@@ -54,6 +36,27 @@ for (k in 1:10) {
 }
 
 
+# Step 2b
+pca_count <- function(A, T, k) {
+  labels <- numeric(k)
+  
+  for (k in 1:n) {
+    d <- 0
+    for (i in 1:10) {
+      residual <- A - T
+      
+      dist_pca[i] <- sqrt(sum(residual^2))
+      
+      if (dist_pca[i] < dist_pca[d+1]) {
+        d <- i - 1
+      }
+    }
+    
+    labels[i] <- d
+  }
+  
+  return(labels)
+}
 
 
 

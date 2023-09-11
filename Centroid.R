@@ -8,9 +8,8 @@ for (k in 1:10) {
 }
 
 
-# Step b
+# Step B
 classifier <- function(A, T, n) {
-  #n <- nrow(A)
   labels <- numeric(n)
   
   for (i in 1:n) {

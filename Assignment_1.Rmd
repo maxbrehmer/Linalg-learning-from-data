@@ -45,7 +45,10 @@ for (k in 1:784) {
 
 ```{r}
 source("Centroid.R", local = knitr::knit_global())
+```
 
+
+```{r}
 dist_score <- data.frame("Digit" = c(0, 1, 2, 3, 4, 5, 6, 7, 8 ,9), 
                           "Norm distance" = c(dist[1], dist[2], dist[3], 
                                       dist[4], dist[5], dist[6], 
@@ -107,9 +110,8 @@ knitr::kable(digit_score)
 source("PCA.R", local = knitr::knit_global())
 ```
 
+### Step 2a: Finding principal components of the test training set
 ```{r}
-# Assuming you have already defined 'Us' and 'test4' in your R environment
-
 # Get the 14th row from 'test4' and convert it to a double vector
 z <- as.vector(as.double(mnistdata$test4[14, , drop = TRUE]))
 
@@ -135,12 +137,19 @@ for (k in 1:10) {
 
 ```{r}
 size_U3
-
-dist_pca
 ```
 
 
-### Step 2a: Finding principal components of the test training set
+```{r}
+dist_pca
+
+dist_pca_score <- data.frame("Digit" = c(0, 1, 2, 3, 4, 5, 6, 7, 8 ,9), 
+                          "Norm distance" = c(dist_pca[1], dist_pca[2], dist_pca[3], 
+                                      dist_pca[4], dist_pca[5], dist_pca[6], 
+                                      dist_pca[7], dist_pca[8], dist_pca[9], dist_pca[10]))
+
+knitr::kable(dist_pca_score)
+```
 
 ### Step 2b: Test and reporting of success rate
 
